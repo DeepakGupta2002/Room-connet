@@ -32,11 +32,11 @@ class OtpController extends Controller
         $key = $data['flow'] === 'register' ? 'pending_registration' : 'pending_login';
         $pending = $request->session()->get($key);
         abort_unless($pending, 403);
-        if ($pending['expires_at'] < now()->timestamp) return back()->withErrors(['otp' => 'OTP expire ho gaya. Resend OTP karein.']);
-        if (($pending['attempts'] ?? 0) >= 5) return back()->withErrors(['otp' => 'Maximum attempts complete ho gaye. Naya OTP request karein.']);
+        if ($pending['expires_at'] < now()->timestamp) return back()->withErrors(['otp' => 'This OTP has expired. Request a new OTP.']);
+        if (($pending['attempts'] ?? 0) >= 5) return back()->withErrors(['otp' => 'Maximum attempts reached. Request a new OTP.']);
         if (! Hash::check($data['otp'], $pending['otp_hash'])) {
             $pending['attempts'] = ($pending['attempts'] ?? 0) + 1; $request->session()->put($key, $pending);
-            return back()->withErrors(['otp' => 'OTP incorrect hai.']);
+            return back()->withErrors(['otp' => 'The OTP is incorrect.']);
         }
         if ($data['flow'] === 'register') {
             $user = DB::transaction(function () use ($pending): User {
@@ -46,15 +46,15 @@ class OtpController extends Controller
             });
         } else { $user = User::findOrFail($pending['user_id']); }
         $request->session()->forget($key); Auth::login($user); $request->session()->regenerate(); $user->forceFill(['last_login_at' => now()])->save();
-        return redirect()->intended('/')->with('status', $data['flow'] === 'register' ? 'Account successfully verify ho gaya.' : 'Login successful.');
+        return redirect()->intended('/')->with('status', $data['flow'] === 'register' ? 'Your account has been verified.' : 'Login successful.');
     }
 
     public function resend(Request $request): RedirectResponse
     {
         $data = $request->validate(['flow' => ['required', 'in:register,login']]); $key = $data['flow'] === 'register' ? 'pending_registration' : 'pending_login'; $pending = $request->session()->get($key); abort_unless($pending, 403);
-        if (($pending['resend_available_at'] ?? 0) > now()->timestamp) return back()->withErrors(['otp' => 'Resend thodi der baad available hoga.']);
+        if (($pending['resend_available_at'] ?? 0) > now()->timestamp) return back()->withErrors(['otp' => 'Resend will be available shortly.']);
         $otp = (string) random_int(100000, 999999); $pending['otp_hash'] = Hash::make($otp); $pending['expires_at'] = now()->addMinutes(config('auth.verification.otp_expire'))->timestamp; $pending['resend_available_at'] = now()->addSeconds(config('auth.verification.otp_resend_seconds'))->timestamp; $pending['attempts'] = 0; $request->session()->put($key, $pending);
-        try { Mail::raw("Your RoomConnect verification OTP is {$otp}. It expires in ".config('auth.verification.otp_expire')." minutes. Do not share this code.", function ($message) use ($pending): void { $message->to($pending['email'])->subject('RoomConnect verification OTP'); }); } catch (\Throwable $exception) { Log::warning('OTP resend failed', ['exception' => $exception->getMessage()]); return back()->withErrors(['otp' => 'OTP resend nahi ho saka.']); }
-        return back()->with('status', 'Naya OTP email par bhej diya gaya.');
+        try { Mail::raw("Your RoomConnect verification OTP is {$otp}. It expires in ".config('auth.verification.otp_expire')." minutes. Do not share this code.", function ($message) use ($pending): void { $message->to($pending['email'])->subject('RoomConnect verification OTP'); }); } catch (\Throwable $exception) { Log::warning('OTP resend failed', ['exception' => $exception->getMessage()]); return back()->withErrors(['otp' => 'We could not resend the OTP.']); }
+        return back()->with('status', 'A new OTP has been sent to your email.');
     }
 }

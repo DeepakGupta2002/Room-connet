@@ -24,8 +24,8 @@ class RegistrationController extends Controller
         $email = strtolower(trim($validated['email']));
         $phone = '+91'.$validated['phone'];
         $phoneHash = hash_hmac('sha256', $phone, config('app.key'));
-        if (User::where('email', $email)->exists()) return back()->withErrors(['email' => 'Ye email already registered hai. Login ke liye OTP request karein.'])->withInput();
-        if (User::where('phone_hash', $phoneHash)->exists()) return back()->withErrors(['phone' => 'Ye phone number already registered hai.'])->withInput();
+        if (User::where('email', $email)->exists()) return back()->withErrors(['email' => 'This email is already registered. Request a login OTP instead.'])->withInput();
+        if (User::where('phone_hash', $phoneHash)->exists()) return back()->withErrors(['phone' => 'This phone number is already registered.'])->withInput();
 
         $otp = (string) random_int(100000, 999999);
         $request->session()->put('pending_registration', [
@@ -38,7 +38,7 @@ class RegistrationController extends Controller
             Mail::raw("Your RoomConnect verification OTP is {$otp}. It expires in ".config('auth.verification.otp_expire')." minutes. Do not share this code.", function ($message) use ($email): void { $message->to($email)->subject('RoomConnect verification OTP'); });
         } catch (\Throwable $exception) {
             Log::warning('Registration OTP could not be sent', ['email' => $email, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['email' => 'OTP email send nahi ho saka. SMTP settings check karke dobara try karein.'])->withInput();
+            return back()->withErrors(['email' => 'We could not send the OTP email. Check the mail settings and try again.'])->withInput();
         }
         if ($request->header('X-Inertia')) return redirect()->route('otp.notice', ['flow' => 'register']);
         return response()->json(['message' => 'OTP sent. Please verify your email.', 'verification_required' => true], 202);

@@ -21,7 +21,7 @@ class SessionController extends Controller
         $user = filter_var($identifier, FILTER_VALIDATE_EMAIL)
             ? User::where('email', strtolower($identifier))->first()
             : User::where('phone_hash', hash_hmac('sha256', str_starts_with($identifier, '+') ? $identifier : '+91'.$identifier, config('app.key')))->first();
-        if (! $user) return back()->withErrors(['identifier' => 'Account nahi mila. Pehle register karein.'])->withInput();
+        if (! $user) return back()->withErrors(['identifier' => 'Account not found. Please create an account first.'])->withInput();
         $email = $user->email;
         $otp = (string) random_int(100000, 999999);
         $request->session()->put('pending_login', ['user_id' => $user->id, 'email' => $email, 'otp_hash' => Hash::make($otp), 'expires_at' => now()->addMinutes(config('auth.verification.otp_expire'))->timestamp, 'resend_available_at' => now()->addSeconds(config('auth.verification.otp_resend_seconds'))->timestamp, 'attempts' => 0]);
@@ -29,7 +29,7 @@ class SessionController extends Controller
             Mail::raw("Your RoomConnect login OTP is {$otp}. It expires in ".config('auth.verification.otp_expire')." minutes. Do not share this code.", function ($message) use ($email): void { $message->to($email)->subject('RoomConnect login OTP'); });
         } catch (\Throwable $exception) {
             Log::warning('Login OTP could not be sent', ['exception' => $exception->getMessage()]);
-            return back()->withErrors(['identifier' => 'OTP email send nahi ho saka. SMTP settings check karein.'])->withInput();
+            return back()->withErrors(['identifier' => 'We could not send the OTP email. Check the mail settings and try again.'])->withInput();
         }
         if ($request->header('X-Inertia')) return redirect()->route('otp.notice', ['flow' => 'login']);
         return response()->json(['message' => 'OTP sent.'], 202);
