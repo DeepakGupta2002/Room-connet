@@ -8,6 +8,7 @@ return [
         // Supported values: email, sms. Invalid values are rejected by the auth layer.
         'mode' => env('AUTH_VERIFICATION_MODE', 'email'),
         'email_required' => (bool) env('AUTH_EMAIL_VERIFICATION_REQUIRED', true),
+        'expire' => (int) env('AUTH_EMAIL_VERIFICATION_EXPIRE_MINUTES', 60),
         'sms_provider' => env('AUTH_SMS_OTP_PROVIDER', 'firebase'),
     ],
 
