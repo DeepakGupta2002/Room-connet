@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'moderator', 'display_name' => 'Moderator', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'admin', 'display_name' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
         ], ['name'], ['display_name', 'updated_at']);
+
+        $this->call(RoomConnectDemoSeeder::class);
     }
 }
