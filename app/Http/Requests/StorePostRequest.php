@@ -32,6 +32,8 @@ class StorePostRequest extends FormRequest
             'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'owner_name' => ['required', 'string', 'max:120'],
             'owner_phone' => ['required', 'string', 'regex:/^[0-9+() -]{8,20}$/'],
+            'images' => ['nullable', 'array', 'max:6'],
+            'images.*' => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
 

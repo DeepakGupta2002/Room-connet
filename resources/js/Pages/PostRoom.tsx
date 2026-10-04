@@ -21,6 +21,7 @@ type FormData = {
     longitude: string;
     owner_name: string;
     owner_phone: string;
+    images: File[];
 };
 
 export default function PostRoom() {
@@ -31,7 +32,7 @@ export default function PostRoom() {
     const form = useForm<FormData>({
         listed_by_role: 'tenant', title: '', description: '', rent_amount: '', security_deposit: '',
         maintenance_charge: '', room_type: 'private_room', available_from: '', leaving_date: '',
-        city: '', area: '', locality: '', pincode: '', approximate_address: '', latitude: '', longitude: '', owner_name: '', owner_phone: '',
+        city: '', area: '', locality: '', pincode: '', approximate_address: '', latitude: '', longitude: '', owner_name: '', owner_phone: '', images: [],
     });
 
     useEffect(() => {
@@ -79,7 +80,7 @@ export default function PostRoom() {
 
     function submit(event: FormEvent) {
         event.preventDefault();
-        form.post('/post-room');
+        form.post('/post-room', { forceFormData: true });
     }
 
     const field = (name: keyof FormData, type = 'text') => (
@@ -91,7 +92,7 @@ export default function PostRoom() {
             <section><h2 className="font-bold">Listing identity</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-medium">Listed by<select value={form.data.listed_by_role} onChange={(e) => form.setData('listed_by_role', e.target.value as FormData['listed_by_role'])} className="field mt-2"><option value="tenant">Tenant</option><option value="owner">Owner</option></select></label><label className="text-sm font-medium">Room type<select value={form.data.room_type} onChange={(e) => form.setData('room_type', e.target.value)} className="field mt-2"><option value="private_room">Private room</option><option value="shared_room">Shared room</option><option value="shared_flat">Shared flat</option><option value="studio">Studio</option><option value="1bhk">1 BHK</option><option value="2bhk">2 BHK</option><option value="3bhk">3 BHK</option></select></label></div><label className="mt-4 block text-sm font-medium">Title{field('title')}</label><label className="mt-4 block text-sm font-medium">Description<textarea value={form.data.description} onChange={(e) => form.setData('description', e.target.value)} className="field mt-2 min-h-28" placeholder="Room, flatmates, rules, amenities..." /></label></section>
             <section><h2 className="font-bold">Rent and dates</h2><div className="mt-4 grid gap-4 sm:grid-cols-3"><label className="text-sm font-medium">Monthly rent{field('rent_amount', 'number')}</label><label className="text-sm font-medium">Deposit{field('security_deposit', 'number')}</label><label className="text-sm font-medium">Maintenance{field('maintenance_charge', 'number')}</label><label className="text-sm font-medium">Available from{field('available_from', 'date')}</label><label className="text-sm font-medium">Leaving date{field('leaving_date', 'date')}</label></div><p className="mt-3 text-xs text-slate-500">Leaving date ke 15 din baad listing expire hogi. Leaving date na ho to listing 90 din ke liye active rahegi.</p></section>
             <section><h2 className="font-bold">Location</h2><p className="mt-2 text-sm text-slate-500">Google Maps se area select karein. Public ko exact flat/house address nahi dikhaya jayega.</p><label className="mt-4 block text-sm font-medium">Search area or landmark<input ref={addressRef} value={form.data.approximate_address} onChange={(e) => form.setData('approximate_address', e.target.value)} placeholder="Search with Google Maps" className="field mt-2" /></label>{!googleMapsKey && <p className="mt-2 text-xs text-amber-700">Maps key configure nahi hai; aap manual location fields use kar sakte hain.</p>}<div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-medium">City{field('city')}</label><label className="text-sm font-medium">Area{field('area')}</label><label className="text-sm font-medium">Locality{field('locality')}</label><label className="text-sm font-medium">Pincode{field('pincode')}</label></div>{mapsReady && <div ref={mapRef} className="mt-4 h-48 rounded-2xl bg-slate-100" />}<p className="mt-2 text-xs text-slate-500">Selected coordinates secure database me save honge; public map approximate 400m radius show karega.</p></section>
-            <section><h2 className="font-bold">Owner contact</h2><p className="mt-2 text-sm text-slate-500">Ye number public listing me nahi dikhega. Tenant ka number kabhi store nahi hoga.</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-medium">Owner name{field('owner_name')}</label><label className="text-sm font-medium">Owner phone{field('owner_phone', 'tel')}</label></div></section>
+            <section><h2 className="font-bold">Room photos</h2><p className="mt-2 text-sm text-slate-500">Maximum 6 photos, JPG/PNG/WEBP, each up to 5 MB. First photo cover rahegi.</p><label className="mt-4 block cursor-pointer rounded-2xl border border-dashed border-blue-300 bg-blue-50 p-5 text-center text-sm font-semibold text-blue-700"><input type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden" onChange={(e) => form.setData('images', Array.from(e.target.files ?? []).slice(0, 6))} />{form.data.images.length ? `${form.data.images.length} photo(s) selected` : 'Select room photos'}</label></section><section><h2 className="font-bold">Owner contact</h2><p className="mt-2 text-sm text-slate-500">Ye number public listing me nahi dikhega. Tenant ka number kabhi store nahi hoga.</p><div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm font-medium">Owner name{field('owner_name')}</label><label className="text-sm font-medium">Owner phone{field('owner_phone', 'tel')}</label></div></section>
             {(Object.keys(form.errors).length > 0) && <div className="rounded-2xl bg-red-50 p-4 text-sm text-red-700">Form me kuch fields check karein: {Object.values(form.errors).join(' ')}</div>}
             <button disabled={form.processing} className="button">{form.processing ? 'Publishing…' : 'Publish room listing'}</button>
         </form></div></main></>

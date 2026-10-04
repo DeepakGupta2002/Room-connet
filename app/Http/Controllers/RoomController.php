@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -94,7 +95,7 @@ class RoomController extends Controller
             'location_radius_meters' => $post->location_radius_meters,
             'owner_name' => $post->owner?->name,
             'owner_contact_available' => (bool) ($post->owner?->phone_encrypted && $post->owner?->contact_consent_at),
-            'images' => $post->images->map(fn ($image) => ['path' => $image->image_path, 'is_cover' => $image->is_cover])->values()->all(),
+            'images' => $post->images->map(fn ($image) => ['path' => Storage::disk('public')->url($image->image_path), 'is_cover' => $image->is_cover])->values()->all(),
             'expires_at' => $post->expires_at?->toDateString(),
         ];
     }

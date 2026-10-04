@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
 use App\Models\PropertyOwner;
+use App\Models\PostImage;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class PostController extends Controller
             $expiresAt = ($leavingDate ?? $availableFrom->copy()->addDays(90))->addDays($leavingDate ? 15 : 0);
             $slug = $this->uniqueSlug($data['title'], $data['city'], $data['area']);
 
-            Post::create([
+            $post = Post::create([
                 'listed_by_user_id' => $request->user()->id,
                 'owner_id' => $owner->id,
                 'listed_by_role' => $data['listed_by_role'],
@@ -59,6 +60,17 @@ class PostController extends Controller
                 'verification_status' => 'unverified',
                 'approval_status' => config('roomconnect.owner_approval_required', false) ? 'pending' : 'not_required',
             ]);
+
+            foreach ($request->file('images', []) as $index => $image) {
+                PostImage::create([
+                    'post_id' => $post->id,
+                    'image_path' => $image->store('room-images', 'public'),
+                    'mime_type' => $image->getMimeType(),
+                    'file_size' => $image->getSize(),
+                    'display_order' => $index,
+                    'is_cover' => $index === 0,
+                ]);
+            }
         });
 
         return back()->with('status', 'Room listing successfully create ho gayi.');
