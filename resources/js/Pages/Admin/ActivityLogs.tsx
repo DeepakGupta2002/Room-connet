@@ -1,0 +1,12 @@
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+
+type Log = { id: number; action: string; entity_type?: string; entity_id?: number; meta_data?: Record<string, unknown>; ip_address?: string; created_at: string; user?: { name: string; email: string } };
+
+export default function ActivityLogs() {
+    const { logs, filters = {}, error } = usePage<{ logs: { data: Log[]; total: number }; filters?: { action?: string }; error?: string }>().props;
+    const [action, setAction] = useState(filters.action ?? '');
+    function submit(event: FormEvent) { event.preventDefault(); router.get('/admin/activity-logs', { action }, { preserveState: true, replace: true }); }
+    return <><Head title="Activity and Audit Logs" /><main className="min-h-screen bg-slate-50 px-4 py-6 text-slate-950 sm:px-8"><div className="mx-auto max-w-5xl"><div className="flex items-center justify-between"><Link href="/admin" className="font-black text-blue-700">← Admin dashboard</Link><span className="text-sm font-semibold text-slate-500">Audit trail</span></div><h1 className="mt-10 text-3xl font-black">Activity and audit logs</h1><p className="mt-2 text-slate-500">Sensitive admin actions traceable format me stored hain.</p>{error && <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm text-red-700">{error}</div>}<form onSubmit={submit} className="mt-6 flex gap-3 rounded-3xl border border-slate-200 bg-white p-4"><input value={action} onChange={(e) => setAction(e.target.value)} placeholder="Filter action" className="field" /><button className="button w-auto">Filter</button></form><div className="mt-5 space-y-3">{logs.data.map((log) => <article key={log.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"><div className="flex flex-col justify-between gap-2 sm:flex-row"><div><p className="font-bold text-slate-900">{log.action}</p><p className="mt-1 text-sm text-slate-500">{log.user?.name ?? 'System'} · {log.entity_type ?? 'system'} #{log.entity_id ?? '—'}</p></div><time className="text-xs text-slate-400">{log.created_at}</time></div>{log.meta_data && <pre className="mt-3 overflow-x-auto rounded-xl bg-slate-50 p-3 text-xs text-slate-600">{JSON.stringify(log.meta_data, null, 2)}</pre>}</article>)}{!logs.data.length && <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">No activity logs found.</div>}</div></div></main></>;
+}

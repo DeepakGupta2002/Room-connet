@@ -10,6 +10,8 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Admin\ModerationController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ActivityLogController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -36,8 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
 });
 
 Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->group(function (): void {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/moderation', [ModerationController::class, 'index'])->name('admin.moderation');
     Route::patch('/moderation/{report}', [ModerationController::class, 'update'])->name('admin.moderation.update');
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs');
 });
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
