@@ -12,6 +12,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\DonationController;
+use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -21,6 +23,8 @@ Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login.page')
 Route::get('/register', fn () => Inertia::render('Auth/Register'))->name('register.page');
 Route::get('/email/verify', fn () => Inertia::render('Auth/VerifyEmail'))->middleware('auth')->name('verification.notice');
 Route::get('/search', [ListingController::class, 'search'])->name('search');
+Route::get('/donations', [DonationController::class, 'index'])->name('donations');
+Route::post('/donations', [DonationController::class, 'store'])->middleware(['auth', 'throttle:5,1'])->name('donations.store');
 Route::get('/post-room', fn () => Inertia::render('PostRoom', [
     'googleMapsKey' => config('services.google_maps.key'),
 ]))->middleware('auth')->name('post-room');
@@ -42,6 +46,8 @@ Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->group(func
     Route::get('/moderation', [ModerationController::class, 'index'])->name('admin.moderation');
     Route::patch('/moderation/{report}', [ModerationController::class, 'update'])->name('admin.moderation.update');
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('admin.activity-logs');
+    Route::get('/donations', [AdminDonationController::class, 'index'])->name('admin.donations');
+    Route::patch('/donations/{donation}', [AdminDonationController::class, 'verify'])->name('admin.donations.verify');
 });
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
