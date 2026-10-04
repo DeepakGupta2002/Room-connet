@@ -25,6 +25,8 @@ Route::get('/email/verify', fn () => Inertia::render('Auth/VerifyEmail'))->middl
 Route::get('/search', [ListingController::class, 'search'])->name('search');
 Route::get('/donations', [DonationController::class, 'index'])->name('donations');
 Route::post('/donations', [DonationController::class, 'store'])->middleware(['auth', 'throttle:5,1'])->name('donations.store');
+Route::post('/donations/razorpay/order', [DonationController::class, 'createRazorpayOrder'])->middleware(['auth', 'throttle:5,1'])->name('donations.razorpay.order');
+Route::post('/donations/razorpay/verify', [DonationController::class, 'verifyRazorpayPayment'])->middleware(['auth', 'throttle:10,1'])->name('donations.razorpay.verify');
 Route::get('/post-room', fn () => Inertia::render('PostRoom', [
     'googleMapsKey' => config('services.google_maps.key'),
 ]))->middleware('auth')->name('post-room');
