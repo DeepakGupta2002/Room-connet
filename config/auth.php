@@ -4,6 +4,13 @@ use App\Models\User;
 
 return [
 
+    'verification' => [
+        // Supported values: email, sms. Invalid values are rejected by the auth layer.
+        'mode' => env('AUTH_VERIFICATION_MODE', 'email'),
+        'email_required' => (bool) env('AUTH_EMAIL_VERIFICATION_REQUIRED', true),
+        'sms_provider' => env('AUTH_SMS_OTP_PROVIDER', 'firebase'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
