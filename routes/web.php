@@ -22,6 +22,10 @@ Route::get('/post-room', fn () => Inertia::render('PostRoom', [
 ]))->middleware('auth')->name('post-room');
 Route::post('/post-room', [PostController::class, 'store'])->middleware('auth')->name('post-room.store');
 Route::get('/my-listings', [ListingController::class, 'mine'])->middleware('auth')->name('my-listings');
+Route::middleware('auth')->group(function (): void {
+    Route::get('/my-listings/{post:slug}/edit', [PostController::class, 'edit'])->name('my-listings.edit');
+    Route::put('/my-listings/{post:slug}', [PostController::class, 'update'])->name('my-listings.update');
+});
 Route::get('/rooms/{post:slug}', [RoomController::class, 'show'])->name('rooms.show');
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/rooms/{post:slug}/contact', [RoomController::class, 'contact'])->name('rooms.contact');
