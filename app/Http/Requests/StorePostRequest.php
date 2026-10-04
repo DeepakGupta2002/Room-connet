@@ -28,6 +28,8 @@ class StorePostRequest extends FormRequest
             'locality' => ['nullable', 'string', 'max:120'],
             'pincode' => ['nullable', 'string', 'max:12'],
             'approximate_address' => ['nullable', 'string', 'max:1000'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'owner_name' => ['required', 'string', 'max:120'],
             'owner_phone' => ['required', 'string', 'regex:/^[0-9+() -]{8,20}$/'],
         ];
