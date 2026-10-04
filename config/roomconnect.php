@@ -10,4 +10,6 @@ return [
     'contact_unlock_requires_login' => (bool) env('CONTACT_UNLOCK_REQUIRES_LOGIN', true),
     'donation_required' => (bool) env('DONATION_REQUIRED', false),
     'donation_provider' => env('DONATION_PAYMENT_PROVIDER', 'manual'),
+    'donation_upi_id' => env('DONATION_UPI_ID'),
+    'donation_qr_image' => env('DONATION_QR_IMAGE', '/images/donation-qr.png'),
 ];

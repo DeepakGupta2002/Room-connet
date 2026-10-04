@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Donation extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id', 'post_id', 'amount', 'currency', 'provider', 'order_id', 'payment_id', 'status', 'verified_at', 'access_granted_until'];
+    protected $fillable = ['user_id', 'post_id', 'amount', 'currency', 'payment_method', 'provider', 'order_id', 'payment_id', 'payment_reference', 'proof_path', 'status', 'verified_at', 'access_granted_until'];
     protected function casts(): array { return ['amount' => 'decimal:2', 'verified_at' => 'datetime', 'access_granted_until' => 'datetime']; }
     public function user() { return $this->belongsTo(User::class); }
     public function post() { return $this->belongsTo(Post::class); }

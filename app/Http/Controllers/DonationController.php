@@ -8,6 +8,7 @@ use App\Models\DonationPublicProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -22,7 +23,7 @@ class DonationController extends Controller
             'verified_at' => $donation->verified_at?->toDateString(),
         ]);
 
-        return Inertia::render('Donations', ['donors' => $donors]);
+        return Inertia::render('Donations', ['donors' => $donors, 'upiId' => config('roomconnect.donation_upi_id'), 'qrImage' => config('roomconnect.donation_qr_image')]);
     }
 
     public function store(StoreDonationRequest $request): RedirectResponse
@@ -34,7 +35,10 @@ class DonationController extends Controller
                     'user_id' => $request->user()->id,
                     'amount' => $data['amount'],
                     'currency' => 'INR',
-                    'provider' => config('roomconnect.donation_provider'),
+                    'payment_method' => $data['payment_method'],
+                    'provider' => $data['payment_method'] === 'qr' ? 'manual_qr' : config('roomconnect.donation_provider'),
+                    'payment_reference' => $data['payment_reference'] ?? null,
+                    'proof_path' => $request->file('proof')?->store('donation-proofs', 'local'),
                     'status' => 'pending',
                 ]);
 
