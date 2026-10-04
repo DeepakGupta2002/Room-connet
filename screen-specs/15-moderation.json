@@ -1,0 +1,9 @@
+{
+  "id": "moderation",
+  "route": "/admin/moderation",
+  "title": "Listing Moderation",
+  "access": "admin_or_moderator",
+  "components": ["filters", "flagged_listing_table", "listing_detail_drawer", "hide_button", "restore_button", "reject_button", "action_reason"],
+  "rules": {"three_unique_reports": "temporary_hide_and_review", "duplicate_reports": "ignored", "actions_audited": true},
+  "api": {"list": "GET /api/admin/moderation", "action": "POST /api/admin/moderation/{id}/action"}
+}

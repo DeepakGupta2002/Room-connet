@@ -1,0 +1,9 @@
+{
+  "id": "admin_dashboard",
+  "route": "/admin",
+  "title": "Admin Dashboard",
+  "access": "admin_only",
+  "components": ["system_stats", "pending_reports", "flagged_listings", "user_risk_summary", "donation_summary", "audit_summary"],
+  "api": {"stats": "GET /api/admin/dashboard"},
+  "security": ["admin_role_required", "all_admin_actions_audited", "sensitive_data_masked"]
+}

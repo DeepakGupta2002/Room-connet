@@ -1,0 +1,11 @@
+{
+  "id": "post_room",
+  "route": "/post-room",
+  "title": "Post a Room",
+  "access": "verified_tenant_or_owner",
+  "steps": ["role_selection", "basic_details", "rent_and_charges", "dates", "location", "images", "owner_contact", "preview_and_submit"],
+  "fields": ["listed_by_role", "title", "description", "rent_amount", "rent_type", "security_deposit", "maintenance_charge", "room_type", "leaving_date", "available_from", "city", "area", "approximate_address", "latitude", "longitude", "images", "owner_name", "owner_phone", "contact_consent"],
+  "validation": ["minimum_title", "minimum_description", "minimum_two_images", "future_date", "valid_rent", "valid_owner_phone", "broker_rejected"],
+  "submit_behavior": {"owner_approval_required": false, "initial_status": "active", "approval_status": "not_required", "slug": "server_generated"},
+  "privacy": {"tenant_phone_public": false, "exact_address_public": false, "owner_phone_public": false}
+}

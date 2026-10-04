@@ -1,0 +1,10 @@
+{
+  "id": "profile",
+  "route": "/profile",
+  "title": "Profile and Settings",
+  "access": "login_required",
+  "components": ["profile_form", "phone_verification_status", "donor_status", "privacy_settings", "logout_button", "delete_account_button"],
+  "fields": ["name", "email", "phone", "public_donor_name", "show_donation_name"],
+  "rules": {"phone_change_requires_otp": true, "sensitive_fields_private_by_default": true, "broker_role_not_allowed": true},
+  "api": {"get": "GET /api/profile", "update": "PATCH /api/profile", "logout": "POST /api/auth/logout"}
+}

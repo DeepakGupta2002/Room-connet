@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+vendor/
+node_modules/
+public/build/
+storage/*.key
+storage/logs/
+bootstrap/cache/*.php
+*.log
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini

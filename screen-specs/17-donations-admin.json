@@ -1,0 +1,9 @@
+{
+  "id": "donations_admin",
+  "route": "/admin/donations",
+  "title": "Donations",
+  "access": "admin_only",
+  "components": ["donation_table", "status_filter", "verified_payment_badge", "refund_action", "donor_privacy_indicator"],
+  "rules": {"payment_webhook_verified": true, "payment_ids_private": true, "public_name_requires_opt_in": true, "donor_access_days": "DONOR_ACCESS_DURATION_DAYS"},
+  "api": {"list": "GET /api/admin/donations", "refund": "POST /api/admin/donations/{id}/refund"}
+}

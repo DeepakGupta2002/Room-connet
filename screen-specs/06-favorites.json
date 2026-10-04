@@ -1,0 +1,10 @@
+{
+  "id": "favorites",
+  "route": "/favorites",
+  "title": "Saved Rooms",
+  "access": "login_required",
+  "components": ["saved_room_cards", "remove_favorite", "search_again_button", "empty_state", "loading_skeleton"],
+  "api": {"list": "GET /api/favorites", "remove": "DELETE /api/favorites/{post_id}"},
+  "constraints": ["one_favorite_per_user_listing", "private_contact_fields_hidden"],
+  "responsive": {"mobile": "stacked_cards", "desktop": "grid"}
+}

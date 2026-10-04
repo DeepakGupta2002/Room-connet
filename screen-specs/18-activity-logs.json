@@ -1,0 +1,10 @@
+{
+  "id": "activity_logs_admin",
+  "route": "/admin/activity-logs",
+  "title": "Activity and Audit Logs",
+  "access": "admin_only",
+  "components": ["activity_filters", "log_table", "detail_drawer", "export_action"],
+  "logged_events": ["login", "otp_failure", "listing_create", "listing_edit", "listing_delete", "contact_unlock", "report", "donation", "admin_action"],
+  "never_log": ["raw_otp", "password", "payment_secret", "full_private_contact"],
+  "api": {"list": "GET /api/admin/activity-logs"}
+}

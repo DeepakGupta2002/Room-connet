@@ -1,0 +1,10 @@
+{
+  "id": "my_listings",
+  "route": "/my-listings",
+  "title": "My Listings",
+  "access": "tenant_or_owner_login_required",
+  "components": ["status_tabs", "listing_cards", "edit_button", "delete_button", "mark_filled_button", "renew_button", "post_room_button"],
+  "status_tabs": ["active", "filled", "expired", "flagged", "draft"],
+  "rules": {"edit_delete": "creator_or_admin_only", "mark_filled": "creator_owner_or_admin_confirmation", "broker_listing": false},
+  "api": {"list": "GET /api/my-listings", "edit": "PATCH /api/posts/{id}", "delete": "DELETE /api/posts/{id}", "mark_filled": "POST /api/posts/{id}/mark-filled"}
+}

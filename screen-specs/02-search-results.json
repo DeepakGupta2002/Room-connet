@@ -1,0 +1,13 @@
+{
+  "id": "search_results",
+  "route": "/search",
+  "title": "Search Rooms",
+  "access": "public",
+  "components": ["sticky_search_header", "active_filter_chips", "filter_button", "sort_dropdown", "room_cards", "pagination_or_load_more"],
+  "filters": ["city", "area", "rent_min", "rent_max", "room_type", "furnished", "available_from", "phone_verified"],
+  "card_public_fields": ["cover_image", "title", "rent", "city", "area", "available_from", "role_label", "verification_badges"],
+  "hidden_fields": ["tenant_phone", "owner_phone", "exact_address", "private_email"],
+  "api": {"method": "GET", "path": "/api/rooms", "page_size": 20},
+  "states": ["loading_skeleton", "empty_results", "invalid_filter", "rate_limited", "network_error"],
+  "responsive": {"mobile": "cards_with_filter_bottom_sheet", "desktop": "filter_sidebar_and_grid"}
+}

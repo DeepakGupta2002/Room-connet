@@ -1,0 +1,19 @@
+{
+  "project": "RoomConnect",
+  "design": "mobile_first_responsive",
+  "breakpoints": {"mobile": "0-640px", "tablet": "641-1024px", "desktop": "1025px+"},
+  "roles": ["seeker", "tenant", "owner", "admin", "moderator"],
+  "blocked_roles": ["broker", "agent", "caretaker"],
+  "rules": {
+    "browse_without_login": true,
+    "login_required_for_contact": true,
+    "tenant_phone_never_exposed": true,
+    "owner_approval_required": false,
+    "donation_required": false,
+    "free_daily_limit_env": "FREE_DAILY_CONTACT_UNLOCK_LIMIT",
+    "donor_daily_limit_env": "DONOR_DAILY_CONTACT_UNLOCK_LIMIT",
+    "donor_access_days_env": "DONOR_ACCESS_DURATION_DAYS"
+  },
+  "public_labels": ["Listed by Tenant", "Listed by Owner", "Phone Verified", "Owner Contact Available"],
+  "private_fields": ["tenant_phone", "owner_phone", "exact_address", "private_email", "payment_id"]
+}

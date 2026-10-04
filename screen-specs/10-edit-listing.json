@@ -1,0 +1,10 @@
+{
+  "id": "edit_listing",
+  "route": "/my-listings/{id}/edit",
+  "title": "Edit Listing",
+  "access": "creator_or_admin",
+  "components": ["post_room_form_with_data", "change_warning", "save_button", "cancel_button"],
+  "rules": {"ownership_check": true, "owner_phone_change_requires_verification": true, "major_change_can_trigger_review": true, "slug_user_editable": false},
+  "api": {"method": "PATCH", "path": "/api/posts/{id}"},
+  "states": ["saving", "saved", "validation_error", "unauthorized", "server_error"]
+}

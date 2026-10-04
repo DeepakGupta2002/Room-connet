@@ -1,0 +1,9 @@
+{
+  "id": "users_admin",
+  "route": "/admin/users",
+  "title": "Users and Blocks",
+  "access": "admin_only",
+  "components": ["user_search", "user_table", "role_badges", "block_button", "unblock_button", "activity_drawer"],
+  "rules": {"broker_agent_accounts": "reject_or_block", "admin_actions_audited": true},
+  "api": {"list": "GET /api/admin/users", "block": "POST /api/admin/users/{id}/block", "unblock": "POST /api/admin/users/{id}/unblock"}
+}

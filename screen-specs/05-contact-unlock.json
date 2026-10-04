@@ -1,0 +1,12 @@
+{
+  "id": "contact_unlock",
+  "route": "/rooms/{id}/contact",
+  "title": "Unlock Owner Contact",
+  "access": "verified_login_required",
+  "components": ["listing_summary", "daily_limit_counter", "donation_options", "skip_donation_button", "unlock_button", "owner_contact_result"],
+  "flow": ["check_session", "check_listing_status", "check_existing_unlock", "check_daily_limit", "donation_or_skip", "authorization_check", "create_unlock_record", "return_owner_contact"],
+  "donation_options": [20, 50, 100, "custom", "skip"],
+  "rules": {"same_listing_unlock_once": true, "daily_limit_counts_new_unlocks_only": true, "tenant_phone_returned": false, "owner_phone_requires_consent_and_verification": true, "donor_access_days": "DONOR_ACCESS_DURATION_DAYS", "free_limit": "FREE_DAILY_CONTACT_UNLOCK_LIMIT", "donor_limit": "DONOR_DAILY_CONTACT_UNLOCK_LIMIT"},
+  "api": {"eligibility": "GET /api/rooms/{id}/contact/eligibility", "unlock": "POST /api/rooms/{id}/contact/unlock"},
+  "states": ["already_unlocked", "limit_reached", "payment_pending", "payment_failed", "owner_contact_unavailable", "contact_unlocked"]
+}

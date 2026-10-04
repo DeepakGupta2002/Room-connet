@@ -1,0 +1,12 @@
+{
+  "id": "home",
+  "route": "/",
+  "title": "Find Rooms Without Brokers",
+  "access": "public",
+  "components": ["header", "location_selector", "search_bar", "quick_filter_chips", "room_preview_cards", "zero_broker_banner", "how_it_works", "donation_banner"],
+  "quick_filters": ["Single Room", "Shared Flat", "Furnished", "Listed by Tenant", "Listed by Owner"],
+  "card_fields": ["cover_image", "title", "rent", "area", "available_from", "role_label", "phone_verified_badge", "owner_contact_available_badge"],
+  "actions": {"search": "/search", "open_listing": "/rooms/{slug}", "login": "/login", "post_room": "/post-room"},
+  "states": ["loading", "location_denied", "empty", "network_error"],
+  "responsive": {"mobile": "single_column", "desktop": "3_4_column_grid"}
+}

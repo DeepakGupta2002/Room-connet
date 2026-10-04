@@ -1,0 +1,11 @@
+{
+  "id": "login",
+  "route": "/login",
+  "title": "Login with OTP",
+  "access": "public",
+  "components": ["phone_input", "country_code", "send_otp_button", "otp_input", "resend_timer", "terms_checkbox", "error_message"],
+  "flow": ["normalize_phone", "rate_limit_check", "send_otp", "verify_otp", "create_session", "redirect_to_intended_route"],
+  "api": {"send_otp": "POST /api/auth/otp/send", "verify_otp": "POST /api/auth/otp/verify"},
+  "validation": ["valid_phone", "otp_expiry", "max_attempts", "resend_cooldown"],
+  "states": ["otp_sent", "invalid_otp", "expired_otp", "too_many_attempts", "blocked_user"]
+}

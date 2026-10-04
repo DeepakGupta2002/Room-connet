@@ -1,0 +1,10 @@
+{
+  "id": "dashboard",
+  "route": "/dashboard",
+  "title": "Dashboard",
+  "access": "login_required",
+  "components": ["user_header", "stats_cards", "recent_listings", "recent_unlocks", "donor_status", "quick_actions"],
+  "stats": ["total_listings", "active_listings", "filled_listings", "contacts_unlocked"],
+  "quick_actions": ["post_room", "my_listings", "favorites", "profile"],
+  "responsive": {"mobile": "stacked_cards_and_tabs", "desktop": "sidebar_and_main_content"}
+}

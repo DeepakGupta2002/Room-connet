@@ -1,0 +1,10 @@
+{
+  "id": "owner_approval",
+  "route": "/owner/approve/{token}",
+  "title": "Owner Approval",
+  "access": "secure_token",
+  "components": ["listing_preview", "owner_contact_preview", "approve_button", "reject_button", "reject_reason", "consent_checkbox"],
+  "rules": {"mvp_optional": true, "token_single_use": true, "token_expiry": true, "owner_consent_required": true},
+  "api": {"approve": "POST /api/owner-approvals/{token}/approve", "reject": "POST /api/owner-approvals/{token}/reject"},
+  "states": ["valid_token", "expired_token", "already_used", "approved", "rejected"]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "listing_details",
+  "route": "/rooms/{slug}",
+  "title": "Room Details",
+  "access": "public",
+  "components": ["image_gallery", "rent_summary", "deposit", "maintenance", "availability_dates", "amenities", "approximate_location", "role_badge", "verification_badges", "favorite_button", "report_button", "unlock_contact_button"],
+  "public_fields": ["title", "description", "rent", "deposit", "maintenance", "room_type", "available_from", "leaving_date", "city", "area", "approximate_location", "images", "listed_by_role"],
+  "never_return": ["tenant_phone", "owner_phone", "exact_address", "private_email"],
+  "rules": {"active": "show_and_allow_unlock", "filled": "show_without_contact_unlock", "expired": "show_or_archive_by_policy", "flagged": "hide_or_show_review_message"},
+  "actions": {"favorite": "login_required", "report": "login_required", "unlock_contact": "/rooms/{id}/contact"},
+  "responsive": {"mobile": "gallery_top_and_sticky_cta", "desktop": "gallery_left_details_right"}
+}

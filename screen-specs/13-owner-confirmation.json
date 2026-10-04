@@ -1,0 +1,9 @@
+{
+  "id": "owner_confirmation",
+  "route": "/owner/confirm/{token}",
+  "title": "Confirm Room Availability",
+  "access": "secure_token",
+  "components": ["listing_summary", "still_available_button", "mark_filled_button", "request_edit_button"],
+  "rules": {"no_response": "mark_unverified_or_hide_after_configured_period", "token_expiry": true},
+  "api": {"confirm": "POST /api/owner-confirmations/{token}/confirm", "filled": "POST /api/owner-confirmations/{token}/filled"}
+}
