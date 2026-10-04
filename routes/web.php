@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
+use App\Http\Controllers\Auth\OtpController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoomController;
@@ -20,6 +21,9 @@ Route::get('/', HomeController::class)->name('home');
 
 Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login.page');
 Route::get('/register', fn () => Inertia::render('Auth/Register'))->name('register.page');
+Route::get('/otp/verify', [OtpController::class, 'show'])->name('otp.notice');
+Route::post('/auth/otp/verify', [OtpController::class, 'verify'])->middleware('throttle:10,1')->name('otp.verify');
+Route::post('/auth/otp/resend', [OtpController::class, 'resend'])->middleware('throttle:5,1')->name('otp.resend');
 Route::get('/email/verify', fn () => Inertia::render('Auth/VerifyEmail'))->middleware('auth')->name('verification.notice');
 Route::get('/search', [ListingController::class, 'search'])->name('search');
 Route::get('/donations', [DonationController::class, 'index'])->name('donations');

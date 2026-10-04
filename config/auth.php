@@ -10,6 +10,8 @@ return [
         'email_required' => (bool) env('AUTH_EMAIL_VERIFICATION_REQUIRED', true),
         'expire' => (int) env('AUTH_EMAIL_VERIFICATION_EXPIRE_MINUTES', 60),
         'sms_provider' => env('AUTH_SMS_OTP_PROVIDER', 'firebase'),
+        'otp_expire' => (int) env('AUTH_OTP_EXPIRE_MINUTES', 10),
+        'otp_resend_seconds' => (int) env('AUTH_OTP_RESEND_SECONDS', 60),
     ],
 
     /*

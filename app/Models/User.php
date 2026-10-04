@@ -12,7 +12,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'phone_encrypted', 'phone_hash', 'phone_verified_at', 'status', 'donor_access_until', 'last_login_at'])]
+#[Fillable(['name', 'email', 'password', 'phone_encrypted', 'phone_hash', 'phone_verified_at', 'status', 'donor_access_until', 'last_login_at', 'latitude', 'longitude'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -89,6 +89,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'phone_verified_at' => 'datetime',
             'donor_access_until' => 'datetime',
             'last_login_at' => 'datetime',
+            'latitude' => 'decimal:7',
+            'longitude' => 'decimal:7',
         ];
     }
 }
