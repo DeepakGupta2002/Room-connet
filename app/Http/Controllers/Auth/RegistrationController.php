@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class RegistrationController extends Controller
 {
@@ -31,7 +33,23 @@ class RegistrationController extends Controller
         ]);
 
         Auth::login($user);
-        event(new Registered($user));
+        try {
+            event(new Registered($user));
+        } catch (Throwable $exception) {
+            Log::warning('Registration email could not be sent', [
+                'user_id' => $user->id,
+                'exception' => $exception->getMessage(),
+            ]);
+
+            if ($request->header('X-Inertia')) {
+                return redirect()->route('verification.notice')->with('status', 'Account create ho gaya, lekin verification email abhi send nahi ho saka. Resend button se dobara try karein.');
+            }
+
+            return response()->json([
+                'message' => 'Account created, but verification email could not be sent. Please try resend.',
+                'verification_required' => true,
+            ], 201);
+        }
 
         if ($request->header('X-Inertia')) {
             return redirect()->route('verification.notice');

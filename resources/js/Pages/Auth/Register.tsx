@@ -18,7 +18,7 @@ export default function Register() {
                 <input required type="email" value={form.data.email} onChange={(e) => form.setData('email', e.target.value)} placeholder="Email address" className="field" />
                 <input required type="password" value={form.data.password} onChange={(e) => form.setData('password', e.target.value)} placeholder="Password (8+ characters)" className="field" />
                 <input required type="password" value={form.data.password_confirmation} onChange={(e) => form.setData('password_confirmation', e.target.value)} placeholder="Confirm password" className="field" />
-                {form.errors.email && <p className="text-sm text-red-600">{form.errors.email}</p>}
+                {Object.keys(form.errors).length > 0 && <div className="rounded-xl bg-red-50 p-3 text-sm leading-6 text-red-700">{Object.values(form.errors).join(' ')}</div>}
                 <button disabled={form.processing} className="button">{form.processing ? 'Creating…' : 'Create account'}</button>
             </form>
             <p className="mt-6 text-center text-sm text-slate-500">Already registered? <Link href="/login" className="font-semibold text-blue-700">Login</Link></p>
