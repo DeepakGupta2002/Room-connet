@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 
 type Listing = { id: number; title: string; slug: string; listed_by_label: string; rent_amount: string; room_type: string; city: string; area: string; owner_contact_available: boolean };
@@ -6,10 +6,15 @@ type Listing = { id: number; title: string; slug: string; listed_by_label: strin
 export default function Home() {
     const { featuredListings, isAuthenticated } = usePage<{ featuredListings: Listing[]; isAuthenticated: boolean }>().props;
     const [query, setQuery] = useState('');
+    const logoutForm = useForm({});
 
     function search(event: FormEvent) {
         event.preventDefault();
         window.location.href = query.trim() ? `/search?q=${encodeURIComponent(query.trim())}` : '/search';
+    }
+
+    function logout() {
+        logoutForm.post('/auth/logout');
     }
 
     return (
@@ -19,7 +24,7 @@ export default function Home() {
                 <header className="border-b border-slate-200/80 bg-white/95">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-8 lg:px-10">
                         <Link href="/" className="flex items-center gap-2.5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-lg font-black text-white shadow-sm">R</span><span className="text-lg font-black tracking-tight text-slate-900">RoomConnect</span></Link>
-                        <nav className="flex items-center gap-2 sm:gap-5"><Link href="/search" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Find rooms</Link><Link href="/post-room" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Post a room</Link>{isAuthenticated ? <Link href="/my-listings" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">My account</Link> : <Link href="/login" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">Log in</Link>}</nav>
+                        <nav className="flex items-center gap-2 sm:gap-5"><Link href="/search" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Find rooms</Link><Link href="/post-room" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Post a room</Link>{isAuthenticated ? <><Link href="/my-listings" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">My account</Link><button type="button" onClick={logout} disabled={logoutForm.processing} className="hidden text-sm font-semibold text-slate-500 hover:text-red-600 sm:block">{logoutForm.processing ? 'Logging out…' : 'Logout'}</button></> : <Link href="/login" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">Log in</Link>}</nav>
                     </div>
                 </header>
 
