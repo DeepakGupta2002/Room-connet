@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ListingController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -14,11 +15,12 @@ Route::get('/', function () {
 Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login.page');
 Route::get('/register', fn () => Inertia::render('Auth/Register'))->name('register.page');
 Route::get('/email/verify', fn () => Inertia::render('Auth/VerifyEmail'))->middleware('auth')->name('verification.notice');
-Route::get('/search', fn () => Inertia::render('Search'))->name('search');
+Route::get('/search', [ListingController::class, 'search'])->name('search');
 Route::get('/post-room', fn () => Inertia::render('PostRoom', [
     'googleMapsKey' => config('services.google_maps.key'),
 ]))->middleware('auth')->name('post-room');
 Route::post('/post-room', [PostController::class, 'store'])->middleware('auth')->name('post-room.store');
+Route::get('/my-listings', [ListingController::class, 'mine'])->middleware('auth')->name('my-listings');
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
     ->middleware('throttle:6,1')
