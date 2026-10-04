@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\RoomController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -21,6 +22,11 @@ Route::get('/post-room', fn () => Inertia::render('PostRoom', [
 ]))->middleware('auth')->name('post-room');
 Route::post('/post-room', [PostController::class, 'store'])->middleware('auth')->name('post-room.store');
 Route::get('/my-listings', [ListingController::class, 'mine'])->middleware('auth')->name('my-listings');
+Route::get('/rooms/{post:slug}', [RoomController::class, 'show'])->name('rooms.show');
+Route::middleware(['auth', 'verified'])->group(function (): void {
+    Route::get('/rooms/{post:slug}/contact', [RoomController::class, 'contact'])->name('rooms.contact');
+    Route::post('/rooms/{post:slug}/contact/unlock', [RoomController::class, 'unlock'])->middleware('throttle:30,1')->name('rooms.contact.unlock');
+});
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
     ->middleware('throttle:6,1')

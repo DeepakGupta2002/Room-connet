@@ -10,6 +10,11 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     protected $fillable = ['listed_by_user_id', 'owner_id', 'contact_user_id', 'listed_by_role', 'title', 'description', 'rent_amount', 'rent_type', 'security_deposit', 'maintenance_charge', 'room_type', 'leaving_date', 'available_from', 'expires_at', 'country', 'state', 'city', 'area', 'locality', 'pincode', 'approximate_address', 'latitude', 'longitude', 'location_radius_meters', 'slug', 'listing_status', 'verification_status', 'approval_status', 'trust_score', 'is_flagged', 'last_owner_confirmed_at', 'next_confirmation_at'];
 
     protected function casts(): array
