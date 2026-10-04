@@ -66,6 +66,8 @@ The `screen-specs` directory contains separate JSON files for public seeker scre
 - Tailwind/Vite production build passes
 - Default Laravel tests pass
 - Root route renders the initial RoomConnect React page
+- RoomConnect migrations run successfully on local MariaDB/MySQL
+- Base roles seeded: seeker, tenant, owner, moderator and admin
 
 ## Next implementation order
 
