@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\SessionController;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -15,6 +16,7 @@ Route::get('/register', fn () => Inertia::render('Auth/Register'))->name('regist
 Route::get('/email/verify', fn () => Inertia::render('Auth/VerifyEmail'))->middleware('auth')->name('verification.notice');
 Route::get('/search', fn () => Inertia::render('Search'))->name('search');
 Route::get('/post-room', fn () => Inertia::render('PostRoom'))->middleware('auth')->name('post-room');
+Route::post('/post-room', [PostController::class, 'store'])->middleware('auth')->name('post-room.store');
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
     ->middleware('throttle:6,1')
