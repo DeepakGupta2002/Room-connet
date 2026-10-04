@@ -52,10 +52,10 @@ class ModerationController extends Controller
                 ]);
             });
 
-            return back()->with('status', 'Moderation action successfully save ho gaya.');
+            return back()->with('status', 'Moderation action saved successfully.');
         } catch (Throwable $exception) {
             Log::error('Moderation action failed', ['report_id' => $report->id, 'user_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['moderation' => 'Moderation action save nahi ho saka. Please dobara try karein.']);
+            return back()->withErrors(['moderation' => 'Moderation action could not be saved. Please try again.']);
         }
     }
 }

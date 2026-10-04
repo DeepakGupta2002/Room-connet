@@ -102,10 +102,10 @@ class PostController extends Controller
         } catch (Throwable $exception) {
             foreach ($newFiles as $path) Storage::disk('public')->delete($path);
             Log::error('Room listing creation failed', ['user_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['system' => 'Room listing create nahi ho saki. Please dobara try karein.']);
+            return back()->withErrors(['system' => 'Room listing could not be created. Please try again.']);
         }
 
-        return back()->with('status', 'Room listing successfully create ho gayi.');
+        return back()->with('status', 'Room listing created successfully.');
     }
 
     public function update(UpdatePostRequest $request, Post $post): RedirectResponse
@@ -145,13 +145,13 @@ class PostController extends Controller
             });
 
             foreach ($oldFiles as $path) Storage::disk('public')->delete($path);
-            return back()->with('status', 'Listing successfully update ho gayi.');
+            return back()->with('status', 'Listing updated successfully.');
         } catch (\Illuminate\Validation\ValidationException $exception) {
             throw $exception;
         } catch (Throwable $exception) {
             foreach ($newFiles as $path) Storage::disk('public')->delete($path);
             Log::error('Room listing update failed', ['post_id' => $post->id, 'user_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['system' => 'Listing update nahi ho saki. Please dobara try karein.']);
+            return back()->withErrors(['system' => 'Listing could not be updated. Please try again.']);
         }
     }
 

@@ -22,10 +22,10 @@ class ReportController extends Controller
                 'status' => 'open',
             ]);
 
-            return back()->with('status', 'Report submit ho gayi. Moderation team ise review karegi.');
+            return back()->with('status', 'Report submitted. Our moderation team will review it.');
         } catch (Throwable $exception) {
             Log::warning('Listing report could not be created', ['post_id' => $post->id, 'user_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['report' => 'Report submit nahi ho saki. Ho sakta hai aapne ise pehle report kiya ho.']);
+            return back()->withErrors(['report' => 'Report could not be submitted. You may have already reported this listing.']);
         }
     }
 }

@@ -37,10 +37,10 @@ class DonationController extends Controller
                 }
                 ActivityLog::create(['user_id' => $request->user()->id, 'action' => 'donation.status_updated', 'entity_type' => Donation::class, 'entity_id' => $donation->id, 'meta_data' => ['status' => $status, 'user_id' => $donation->user_id], 'ip_address' => $request->ip(), 'created_at' => now()]);
             });
-            return back()->with('status', 'Donation status update ho gaya.');
+            return back()->with('status', 'Donation status updated successfully.');
         } catch (Throwable $exception) {
             Log::error('Donation verification failed', ['donation_id' => $donation->id, 'admin_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['donation' => 'Donation verify nahi ho saki.']);
+            return back()->withErrors(['donation' => 'Donation could not be verified.']);
         }
     }
 }

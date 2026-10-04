@@ -36,6 +36,6 @@ class EmailVerificationController extends Controller
             $user->sendEmailVerificationNotification();
         }
 
-        return back()->with('status', 'verification-link-sent');
+        return back()->with('status', 'Verification link sent again.');
     }
 }

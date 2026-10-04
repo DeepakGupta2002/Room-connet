@@ -98,10 +98,10 @@ class DonationController extends Controller
                 ]);
             });
 
-            return back()->with('status', 'Donation request create ho gayi. Payment verification ke baad donor access activate hoga.');
+            return back()->with('status', 'Donation request created. Donor access will activate after payment verification.');
         } catch (Throwable $exception) {
             Log::error('Donation creation failed', ['user_id' => $request->user()->id, 'exception' => $exception->getMessage()]);
-            return back()->withErrors(['donation' => 'Donation request create nahi ho saki. Please dobara try karein.']);
+            return back()->withErrors(['donation' => 'Donation request could not be created. Please try again.']);
         }
     }
 }

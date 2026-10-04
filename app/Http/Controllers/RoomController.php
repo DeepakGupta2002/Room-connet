@@ -47,12 +47,12 @@ class RoomController extends Controller
         $post->load('owner:id,name,phone_encrypted,contact_consent_at,status');
 
         if (! $post->owner || ! $post->owner->phone_encrypted || ! $post->owner->contact_consent_at) {
-            return back()->withErrors(['contact' => 'Is listing ke liye owner contact abhi available nahi hai.']);
+            return back()->withErrors(['contact' => 'Owner contact is not currently available for this listing.']);
         }
 
         $existing = ContactUnlock::where('user_id', $request->user()->id)->where('post_id', $post->id)->exists();
         if ($existing) {
-            return back()->with('status', 'Aapne is room ka contact pehle hi unlock kiya hai.');
+            return back()->with('status', 'You have already unlocked this room contact.');
         }
 
         $user = $request->user();
@@ -60,7 +60,7 @@ class RoomController extends Controller
         $limit = $isDonor ? config('roomconnect.donor_daily_contact_unlock_limit') : config('roomconnect.free_daily_contact_unlock_limit');
         $used = ContactUnlock::where('user_id', $user->id)->whereDate('unlocked_at', today())->count();
         if ($used >= $limit) {
-            return back()->withErrors(['limit' => "Aaj ki contact unlock limit ({$limit}) complete ho gayi hai."]);
+            return back()->withErrors(['limit' => "Today’s contact unlock limit ({$limit}) has been reached."]);
         }
 
         $accessDays = $isDonor ? config('roomconnect.donor_access_duration_days') : config('roomconnect.contact_unlock_access_duration_days');
@@ -73,7 +73,7 @@ class RoomController extends Controller
             ]);
         });
 
-        return back()->with('status', 'Owner contact unlock ho gaya.');
+        return back()->with('status', 'Owner contact unlocked successfully.');
     }
 
     private function safeRoom(Post $post): array
