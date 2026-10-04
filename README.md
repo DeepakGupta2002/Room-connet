@@ -39,6 +39,7 @@ resources/views/app.blade.php Inertia root template
 routes/                      Laravel routes
 tests/                       Automated tests
 schema.md                    Database and entity planning
+DATABASE_SCHEMA.md           Table, column and relation reference
 buinesslogic.md              Business workflows and rules
 frontend.md                  UI and UX specification
 DEVELOPMENT_CHECKLIST.md     Decisions and implementation checklist
