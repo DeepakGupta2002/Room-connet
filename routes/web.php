@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Admin\ModerationController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
@@ -30,6 +32,12 @@ Route::get('/rooms/{post:slug}', [RoomController::class, 'show'])->name('rooms.s
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::get('/rooms/{post:slug}/contact', [RoomController::class, 'contact'])->name('rooms.contact');
     Route::post('/rooms/{post:slug}/contact/unlock', [RoomController::class, 'unlock'])->middleware('throttle:30,1')->name('rooms.contact.unlock');
+    Route::post('/rooms/{post:slug}/report', [ReportController::class, 'store'])->middleware('throttle:10,1')->name('rooms.report');
+});
+
+Route::middleware(['auth', 'role:admin,moderator'])->prefix('admin')->group(function (): void {
+    Route::get('/moderation', [ModerationController::class, 'index'])->name('admin.moderation');
+    Route::patch('/moderation/{report}', [ModerationController::class, 'update'])->name('admin.moderation.update');
 });
 
 Route::post('/auth/register', [RegistrationController::class, 'store'])
