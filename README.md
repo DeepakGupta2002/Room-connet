@@ -6,7 +6,7 @@ RoomConnect lets verified users browse rooms without login, while tenants and ow
 
 ## Current status
 
-This repository currently contains the product specification and screen definitions. Application code, migrations, APIs and deployment configuration are not implemented yet.
+The Laravel 13 + React/Inertia application foundation is now initialized. Product specifications are included, while domain migrations, APIs, OTP, payments and moderation logic are still pending implementation.
 
 ## Product decisions
 
@@ -32,6 +32,12 @@ This repository currently contains the product specification and screen definiti
 ## Repository structure
 
 ```text
+app/                         Laravel application code
+database/                    Migrations, factories and seeders
+resources/js/                React/Inertia frontend
+resources/views/app.blade.php Inertia root template
+routes/                      Laravel routes
+tests/                       Automated tests
 schema.md                    Database and entity planning
 buinesslogic.md              Business workflows and rules
 frontend.md                  UI and UX specification
@@ -53,13 +59,20 @@ The `screen-specs` directory contains separate JSON files for public seeker scre
 - Keep private contact data out of public listing responses.
 - Enforce ownership, role checks, rate limits and audit logs on the backend.
 
+## Current setup verification
+
+- Laravel application scaffolded
+- React + TypeScript + Inertia installed
+- Tailwind/Vite production build passes
+- Default Laravel tests pass
+- Root route renders the initial RoomConnect React page
+
 ## Next implementation order
 
-1. Finalize stack and environment setup.
-2. Create Laravel project and database migrations.
-3. Implement OTP authentication and role/ownership policies.
-4. Implement listings, search and image uploads.
-5. Implement contact unlock and daily limits.
-6. Add favorites, reports, moderation and dashboard.
-7. Add donation verification and donor access.
-8. Add automated, security and responsive tests.
+1. Create RoomConnect database migrations and models.
+2. Implement OTP authentication and role/ownership policies.
+3. Implement listings, search and image uploads.
+4. Implement contact unlock and daily limits.
+5. Add favorites, reports, moderation and dashboard.
+6. Add donation verification and donor access.
+7. Add automated, security and responsive tests.
