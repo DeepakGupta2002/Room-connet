@@ -14,10 +14,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Admin\DonationController as AdminDonationController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return Inertia::render('Home');
-});
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('/login', fn () => Inertia::render('Auth/Login'))->name('login.page');
 Route::get('/register', fn () => Inertia::render('Auth/Register'))->name('register.page');

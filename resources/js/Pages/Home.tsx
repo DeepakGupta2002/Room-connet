@@ -1,46 +1,41 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { FormEvent, useState } from 'react';
+
+type Listing = { id: number; title: string; slug: string; listed_by_label: string; rent_amount: string; room_type: string; city: string; area: string; owner_contact_available: boolean };
 
 export default function Home() {
+    const { featuredListings, isAuthenticated } = usePage<{ featuredListings: Listing[]; isAuthenticated: boolean }>().props;
+    const [query, setQuery] = useState('');
+
+    function search(event: FormEvent) {
+        event.preventDefault();
+        window.location.href = query.trim() ? `/search?q=${encodeURIComponent(query.trim())}` : '/search';
+    }
+
     return (
         <>
             <Head title="Find Rooms Without Brokers" />
-
-            <main className="min-h-screen bg-slate-50 text-slate-950">
-                <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center gap-10 px-6 py-12 lg:flex-row lg:items-center lg:px-12">
-                    <div className="max-w-2xl">
-                        <span className="inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-700">
-                            100% broker-free room discovery
-                        </span>
-                        <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
-                            Find your next room directly from the owner.
-                        </h1>
-                        <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                            Browse rooms freely, verify the listing context, and unlock the owner contact only when you are ready.
-                        </p>
-                        <div className="mt-8 flex flex-wrap gap-3">
-                            <Link href="/search" className="rounded-xl bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
-                                Find rooms
-                            </Link>
-                            <Link href="/post-room" className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-semibold text-slate-700 transition hover:border-blue-400 hover:text-blue-700">
-                                Post a room
-                            </Link>
-                        </div>
+            <main className="min-h-screen overflow-hidden bg-slate-50 text-slate-950">
+                <header className="border-b border-slate-200/80 bg-white/95">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-8 lg:px-10">
+                        <Link href="/" className="flex items-center gap-2.5"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-600 text-lg font-black text-white shadow-sm">R</span><span className="text-lg font-black tracking-tight text-slate-900">RoomConnect</span></Link>
+                        <nav className="flex items-center gap-2 sm:gap-5"><Link href="/search" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Find rooms</Link><Link href="/post-room" className="hidden text-sm font-semibold text-slate-600 transition hover:text-teal-700 sm:block">Post a room</Link>{isAuthenticated ? <Link href="/my-listings" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">My account</Link> : <Link href="/login" className="rounded-xl bg-slate-900 px-3.5 py-2.5 text-xs font-bold text-white sm:px-4 sm:text-sm">Log in</Link>}</nav>
                     </div>
+                </header>
 
-                    <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-blue-100/50">
-                        <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 text-white">
-                            <p className="text-sm font-medium text-blue-100">Start searching</p>
-                            <h2 className="mt-2 text-2xl font-bold">Rooms near you</h2>
-                            <div className="mt-6 rounded-xl bg-white/15 p-4 text-sm text-blue-50">
-                                Approximate locations are public. Owner contact stays protected until OTP verification and unlock.
-                            </div>
-                        </div>
-                        <div className="mt-5 grid grid-cols-2 gap-3 text-sm font-medium text-slate-700">
-                            <div className="rounded-xl bg-slate-100 p-4">Phone verified</div>
-                            <div className="rounded-xl bg-emerald-50 p-4 text-emerald-700">Owner contact</div>
-                        </div>
+                <section className="relative bg-gradient-to-br from-teal-50 via-white to-amber-50/60">
+                    <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-8 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-10 lg:py-24">
+                        <div><div className="inline-flex items-center gap-2 rounded-full border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-bold text-teal-800"><span className="h-2 w-2 rounded-full bg-teal-500" />100% direct, zero brokerage</div><h1 className="mt-5 max-w-2xl text-4xl font-black leading-tight tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">Find your next room without a broker.</h1><p className="mt-5 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">Discover rooms listed by real tenants and owners. Browse freely, keep your privacy protected, and connect directly when you are ready.</p><form onSubmit={search} className="mt-8 flex max-w-2xl flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/60 sm:flex-row"><div className="flex min-h-12 flex-1 items-center gap-3 px-3"><span className="text-lg text-teal-600">⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} className="w-full bg-transparent text-sm outline-none placeholder:text-slate-400 sm:text-base" placeholder="Search locality, city or landmark" aria-label="Search locality, city or landmark" /></div><button className="min-h-12 rounded-xl bg-teal-600 px-6 text-sm font-bold text-white transition hover:bg-teal-700">Search rooms</button></form><div className="mt-4 flex flex-wrap gap-2">{['Private room', 'Shared flat', 'Furnished'].map((filter) => <Link key={filter} href={`/search?q=${encodeURIComponent(filter)}`} className="rounded-full border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-600 transition hover:border-teal-300 hover:text-teal-700">{filter}</Link>)}</div></div>
+                        <div className="relative mx-auto w-full max-w-md lg:ml-auto"><div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-amber-200/70 blur-2xl" /><div className="relative rounded-[2rem] border border-teal-100 bg-white p-5 shadow-2xl shadow-teal-900/10 sm:p-6"><div className="rounded-3xl bg-slate-900 p-6 text-white sm:p-7"><div className="flex items-start justify-between"><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-300">Community first</p><h2 className="mt-3 text-2xl font-black leading-tight">A safer way to find home.</h2></div><span className="text-3xl">⌂</span></div><p className="mt-5 text-sm leading-6 text-slate-300">No agents. No hidden brokerage. Just transparent listings from the people connected to the room.</p><div className="mt-7 grid grid-cols-3 gap-2 border-t border-white/10 pt-5 text-center"><div><p className="text-xl font-black">0%</p><p className="mt-1 text-[11px] text-slate-400">Brokerage</p></div><div><p className="text-xl font-black">400m</p><p className="mt-1 text-[11px] text-slate-400">Location zone</p></div><div><p className="text-xl font-black">1:1</p><p className="mt-1 text-[11px] text-slate-400">Direct connect</p></div></div></div><div className="mt-4 flex items-start gap-3 rounded-2xl bg-teal-50 p-4"><span className="text-xl text-teal-700">✓</span><div><p className="text-sm font-bold text-teal-950">Owner contact stays protected</p><p className="mt-1 text-xs leading-5 text-teal-800">Unlock is available only after verified login.</p></div></div></div></div>
                     </div>
                 </section>
+
+                <section className="mx-auto max-w-7xl px-4 py-10 sm:px-8 lg:px-10 lg:py-14"><div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><p className="text-sm font-bold text-teal-700">Fresh from the community</p><h2 className="mt-1 text-2xl font-black tracking-tight sm:text-3xl">Rooms you can explore today</h2></div><Link href="/search" className="text-sm font-bold text-teal-700 hover:text-teal-800">View all rooms →</Link></div><div className="mt-6 grid gap-4 md:grid-cols-3">{featuredListings.length ? featuredListings.map((listing) => <article key={listing.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"><div className="flex h-32 items-end bg-gradient-to-br from-teal-100 via-sky-50 to-amber-100 p-4"><span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-slate-700">{listing.listed_by_label}</span></div><div className="p-4"><div className="flex items-start justify-between gap-3"><h3 className="line-clamp-2 text-base font-bold text-slate-900">{listing.title}</h3><p className="shrink-0 text-base font-black text-slate-900">₹{Number(listing.rent_amount).toLocaleString('en-IN')}<span className="text-[10px] font-medium text-slate-500">/mo</span></p></div><p className="mt-2 text-sm capitalize text-slate-500">{listing.room_type.replaceAll('_', ' ')} · {listing.area}, {listing.city}</p><div className="mt-4 flex flex-wrap gap-2 text-[11px]"><span className="rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">✓ Phone protected</span>{listing.owner_contact_available && <span className="rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-800">Owner contact available</span>}</div><Link href={`/rooms/${listing.slug}`} className="mt-4 block rounded-xl border border-teal-200 px-3 py-2.5 text-center text-sm font-bold text-teal-700 transition hover:bg-teal-50">View room</Link></div></article>) : <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500 md:col-span-3">Abhi listings nahi hain. Pehla room aap list kar sakte hain.</div>}</div></section>
+
+                <section className="border-y border-teal-100 bg-teal-50/70"><div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10"><div><p className="text-sm font-bold text-teal-800">Our promise to you</p><h2 className="mt-1 text-xl font-black text-teal-950">100% direct contact guarantee.</h2><p className="mt-2 max-w-2xl text-sm leading-6 text-teal-900/75">Brokers aur agents platform par allowed nahi hain. Exact location aur phone numbers privacy ke liye protected rahenge.</p></div><Link href="/post-room" className="rounded-xl bg-teal-700 px-5 py-3 text-center text-sm font-bold text-white shadow-sm transition hover:bg-teal-800">List your room</Link></div></section>
+
+                <section className="mx-auto max-w-7xl px-4 py-10 sm:px-8 lg:px-10"><div className="grid gap-4 sm:grid-cols-3"><div className="rounded-2xl bg-white p-5"><p className="text-2xl">⌕</p><h3 className="mt-4 font-bold">Discover freely</h3><p className="mt-2 text-sm leading-6 text-slate-500">Search rooms without creating an account.</p></div><div className="rounded-2xl bg-white p-5"><p className="text-2xl text-teal-600">✓</p><h3 className="mt-4 font-bold">Trust the details</h3><p className="mt-2 text-sm leading-6 text-slate-500">See who listed the room and what is verified.</p></div><div className="rounded-2xl bg-white p-5"><p className="text-2xl text-amber-500">↗</p><h3 className="mt-4 font-bold">Connect directly</h3><p className="mt-2 text-sm leading-6 text-slate-500">Unlock only the owner contact when ready.</p></div></div></section>
+                <footer className="border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10"><span className="font-bold text-slate-700">RoomConnect</span><span>Built for direct, broker-free room discovery.</span></div></footer>
             </main>
         </>
     );
